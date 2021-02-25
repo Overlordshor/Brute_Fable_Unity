@@ -18,10 +18,10 @@ public class PlayerKeysController : MonoBehaviour
 
     private void Update()
     {
-        _horizontal = Input.GetAxis("Horizontal");
+        //_horizontal = Input.GetAxis("Horizontal");
         _vectical = Input.GetAxis("Vertical");
 
-        _moveVector = (transform.right * _horizontal + transform.forward * _vectical) * _speed / Time.deltaTime;
+        _moveVector = (/*transform.right * _horizontal + */transform.forward * _vectical) * _speed / Time.deltaTime;
     }
 
     private void FixedUpdate()
