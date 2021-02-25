@@ -8,7 +8,7 @@ public class PlayerKeysController : MonoBehaviour
 
     private Rigidbody _rigidbody;
 
-    private float _horizontal, _vectical;
+    private float _vectical;
     private Vector3 _moveVector;
 
     private void Start()
@@ -18,10 +18,9 @@ public class PlayerKeysController : MonoBehaviour
 
     private void Update()
     {
-        //_horizontal = Input.GetAxis("Horizontal");
         _vectical = Input.GetAxis("Vertical");
 
-        _moveVector = (/*transform.right * _horizontal + */transform.forward * _vectical) * _speed / Time.deltaTime;
+        _moveVector = (transform.forward * _vectical) * _speed / Time.deltaTime;
     }
 
     private void FixedUpdate()
