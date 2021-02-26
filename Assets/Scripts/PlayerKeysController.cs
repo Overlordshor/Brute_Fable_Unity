@@ -1,30 +1,59 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CharacterController))]
 public class PlayerKeysController : MonoBehaviour
 {
-    [SerializeField] private float _speed = 1f;
+    [SerializeField] private float _playerSpeed;
+    [SerializeField] private float _jumpHeight;
 
-    private Rigidbody _rigidbody;
+    private CharacterController _characterController;
 
-    private float _vectical;
-    private Vector3 _moveVector;
+    private float _gravityValue = -9.81f;
+    private Vector3 _playerVelocity;
 
     private void Start()
     {
-        _rigidbody = GetComponent<Rigidbody>();
+        _characterController = GetComponent<CharacterController>();
     }
 
     private void Update()
     {
-        _vectical = Input.GetAxis("Vertical");
+        if (_characterController.enabled)
+        {
+            var groundedPlayer = _characterController.isGrounded;
 
-        _moveVector = (transform.forward * _vectical) * _speed / Time.deltaTime;
+            if (groundedPlayer && _playerVelocity.y < 0)
+            {
+                _playerVelocity.y = 0f;
+            }
+
+            MovePlayer();
+
+            JumpPlayer(groundedPlayer);
+
+            ActGravity();
+        }
     }
 
-    private void FixedUpdate()
+    private void MovePlayer()
     {
-        _rigidbody.AddForce(_moveVector);
+        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        _characterController.Move(move * Time.deltaTime * _playerSpeed);
+        _characterController.Move(_playerVelocity * _playerSpeed * Time.deltaTime);
+    }
+
+    private void ActGravity()
+    {
+        _playerVelocity.y += _gravityValue * Time.deltaTime;
+        _characterController.Move(_playerVelocity * Time.deltaTime);
+    }
+
+    private void JumpPlayer(bool groundedPlayer)
+    {
+        if (Input.GetButtonDown("Jump") && groundedPlayer)
+        {
+            _playerVelocity.y += Mathf.Sqrt(_jumpHeight * -3.0f * _gravityValue);
+        }
     }
 }

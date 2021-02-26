@@ -2,16 +2,16 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CharacterController))]
 public class MoveAnimation : MonoBehaviour
 {
-    private Rigidbody _rigidbody;
+    private CharacterController _characterController;
     private NavMeshAgent _navMeshAgent;
     private Animator _animator;
 
     private void Start()
     {
-        _rigidbody = GetComponent<Rigidbody>();
+        _characterController = GetComponent<CharacterController>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _animator = GetComponentInChildren<Animator>();
     }
@@ -26,9 +26,9 @@ public class MoveAnimation : MonoBehaviour
     {
         float speed = 0f;
 
-        if (!_rigidbody.isKinematic)
+        if (_characterController.enabled)
         {
-            speed = _rigidbody.velocity.magnitude;
+            speed = _characterController.velocity.magnitude;
         }
         else if (_navMeshAgent.enabled)
         {
@@ -46,7 +46,7 @@ public class MoveAnimation : MonoBehaviour
     {
         bool isRunBack = false;
 
-        if (!_rigidbody.isKinematic)
+        if (_characterController.enabled)
         {
             isRunBack = Input.GetAxis("Vertical") < 0;
         }
