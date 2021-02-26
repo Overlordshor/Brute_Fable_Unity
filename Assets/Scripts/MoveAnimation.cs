@@ -19,7 +19,13 @@ public class MoveAnimation : MonoBehaviour
     private void Update()
     {
         _animator.SetFloat("speed", GetSpeed());
-        _animator.SetBool("runBack", IsRunBack());
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            _animator.SetTrigger("jump");
+        }
+
+        //_animator.SetBool("runBack", IsRunBack());
     }
 
     private float GetSpeed()
@@ -28,7 +34,9 @@ public class MoveAnimation : MonoBehaviour
 
         if (_characterController.enabled)
         {
-            speed = _characterController.velocity.magnitude;
+            Vector3 horizontalVelocity = _characterController.velocity;
+            horizontalVelocity = new Vector3(_characterController.velocity.x, 0, _characterController.velocity.z);
+            speed = horizontalVelocity.magnitude;
         }
         else if (_navMeshAgent.enabled)
         {
@@ -42,23 +50,23 @@ public class MoveAnimation : MonoBehaviour
         return speed;
     }
 
-    private bool IsRunBack()
-    {
-        bool isRunBack = false;
+    //private bool IsRunBack()
+    //{
+    //    bool isRunBack = false;
 
-        if (_characterController.enabled)
-        {
-            isRunBack = Input.GetAxis("Vertical") < 0;
-        }
-        else if (_navMeshAgent.enabled)
-        {
-            // функция постановки isRunBack для _navMeshAgent
-        }
-        else
-        {
-            Debug.LogError("Ошибка установки направления бега для аниматора");
-        }
+    //    if (_characterController.enabled)
+    //    {
+    //        isRunBack = Input.GetAxis("Vertical") < 0;
+    //    }
+    //    else if (_navMeshAgent.enabled)
+    //    {
+    //        // функция постановки isRunBack для _navMeshAgent
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError("Ошибка установки направления бега для аниматора");
+    //    }
 
-        return isRunBack;
-    }
+    //    return isRunBack;
+    //}
 }

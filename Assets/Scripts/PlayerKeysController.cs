@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -10,7 +9,7 @@ public class PlayerKeysController : MonoBehaviour
     private CharacterController _characterController;
 
     private float _gravityValue = -9.81f;
-    private Vector3 _playerVelocity;
+    private Vector3 _playerVelocity, _moveDirection;
 
     private void Start()
     {
@@ -39,8 +38,19 @@ public class PlayerKeysController : MonoBehaviour
     private void MovePlayer()
     {
         Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+        RotatePlayer(move);
+
         _characterController.Move(move * Time.deltaTime * _playerSpeed);
         _characterController.Move(_playerVelocity * _playerSpeed * Time.deltaTime);
+    }
+
+    private void RotatePlayer(Vector3 move)
+    {
+        if (move != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(move);
+        }
     }
 
     private void ActGravity()
