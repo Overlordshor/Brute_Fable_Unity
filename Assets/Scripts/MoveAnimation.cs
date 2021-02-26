@@ -34,8 +34,7 @@ public class MoveAnimation : MonoBehaviour
 
         if (_characterController.enabled)
         {
-            Vector3 horizontalVelocity = _characterController.velocity;
-            horizontalVelocity = new Vector3(_characterController.velocity.x, 0, _characterController.velocity.z);
+            var horizontalVelocity = new Vector3(_characterController.velocity.x, 0, _characterController.velocity.z);
             speed = horizontalVelocity.magnitude;
         }
         else if (_navMeshAgent.enabled)

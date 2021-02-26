@@ -1,23 +1,34 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class PlayerKeysController : MonoBehaviour
 {
     [SerializeField] private float _playerSpeed;
     [SerializeField] private float _jumpHeight;
 
     private CharacterController _characterController;
-
+    private NavMeshAgent _navMeshAgent;
     private float _gravityValue = -9.81f;
     private Vector3 _playerVelocity, _moveDirection;
 
     private void Start()
     {
         _characterController = GetComponent<CharacterController>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     private void Update()
     {
+        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+        if (move != Vector3.zero && !_characterController.enabled)
+        {
+            _navMeshAgent.enabled = false;
+            _characterController.enabled = true;
+        }
+
         if (_characterController.enabled)
         {
             var groundedPlayer = _characterController.isGrounded;
@@ -26,23 +37,16 @@ public class PlayerKeysController : MonoBehaviour
             {
                 _playerVelocity.y = 0f;
             }
-
-            MovePlayer();
-
             JumpPlayer(groundedPlayer);
-
             ActGravity();
+            RotatePlayer(move);
+            MovePlayer(move);
         }
     }
 
-    private void MovePlayer()
+    private void MovePlayer(Vector3 move)
     {
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-
-        RotatePlayer(move);
-
         _characterController.Move(move * Time.deltaTime * _playerSpeed);
-        _characterController.Move(_playerVelocity * _playerSpeed * Time.deltaTime);
     }
 
     private void RotatePlayer(Vector3 move)
